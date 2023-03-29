@@ -81,7 +81,7 @@ mudaVar ((s,i):xs) v n
 ---
 ---------------------------------
 
-
+-- EXPRESSÕES --
 ebigStep :: (E,Memoria) -> Int
 ebigStep (Var x,s) = procuraVar s x
 ebigStep (Num n,s) = n
@@ -89,7 +89,7 @@ ebigStep (Soma e1 e2,s)  = ebigStep (e1,s) + ebigStep (e2,s)
 ebigStep (Sub e1 e2,s)  = ebigStep (e1,s) - ebigStep (e2,s)
 ebigStep (Mult e1 e2,s)  =  ebigStep (e1,s) * ebigStep (e2,s)
 
-
+-- BOOLEANOS -- 
 bbigStep :: (B,Memoria) -> Bool
 bbigStep (TRUE,s)  = True
 bbigStep (FALSE,s) = False
@@ -105,7 +105,9 @@ bbigStep (Or b1 b2,s )
 bbigStep (Leq e1 e2,s) = ebigStep (e1,s) <= ebigStep (e2,s)
 bbigStep (Igual e1 e2,s) = ebigStep (e1,s) == ebigStep (e2,s)
 
+-- COMANDOS --
 cbigStep :: (C,Memoria) -> (C,Memoria)
+
 cbigStep (Skip,s) = (Skip,s)
 
 cbigStep (If b c1 c2,s)  
@@ -191,6 +193,12 @@ testec2 = (Seq (Seq (Atrib (Var "z") (Num 10)) (Atrib (Var "x") (Num 3)))
 
 while1 :: C
 while1 = (While (Not (Igual (Var "y") (Num 10))) (Atrib (Var "y") (Soma (Var "y") (Num 1))))
+
+dowhile1 :: C
+dowhile1 = (DoWhile (Atrib (Var "y") (Soma (Var "y") (Num 1))) (Not (Igual (Var "y") (Num 20))))
+
+repeat1 :: C
+repeat1 = (Repeat (Atrib (Var "y") (Soma (Var "y") (Num 1)))  (Igual (Var "y") (Num 30)))
 
 fatorial :: C
 fatorial = (Seq 
