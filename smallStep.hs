@@ -102,7 +102,7 @@ smallStepE (Mult e1 e2,s)              = let (el,sl) = smallStepE (e1,s)
                                          in (Mult el e2, sl)
 
  -- Sub
-smallStepE (Sub (Num n1) (Num n2), s) = (Num (n1 + n2), s)
+smallStepE (Sub (Num n1) (Num n2), s) = (Num (n1 - n2), s)
 
 smallStepE (Sub (Num n) e, s)         = let (el,sl) = smallStepE (e,s)
                                         in (Sub (Num n) el, sl)
@@ -171,7 +171,7 @@ smallStepC (If b c1 c2,s) = let (bl,sl) = smallStepB (b,s)
 smallStepC (While b c, s) = (If b (Seq c (While b c)) (Skip), s)
 
 -- dowhile
---smallStepC (DoWhile c b,s) 
+smallStepC (DoWhile c b,s) = (Seq c (While b c), s)
 
 ----------------------
 --  INTERPRETADORES
@@ -218,7 +218,7 @@ interpretadorC (c,s) = if (isFinalC c) then (c,s) else interpretadorC (smallStep
 -------------------------------------
 
 exSigma2 :: Memoria
-exSigma2 = [("x",2), ("y",0), ("z",0)]
+exSigma2 = [("x",4), ("y",0), ("z",0)]
 
 
 ---
@@ -271,6 +271,9 @@ testeif = (If TRUE (Atrib (Var "x") (Num 10)) (Atrib (Var "x") (Num 200)))
 
 testewhile :: C
 testewhile = (While (Not (Igual (Var "x") (Num 10))) (Atrib (Var "x") (Soma (Var "x") (Num 1))))
+
+testedowhile :: C
+testedowhile = (DoWhile (Atrib (Var "x") (Soma (Var "x") (Num 1))) (Not (Igual (Var "x") (Num 10))))
 
 testec1 :: C
 testec1 = (Seq (Seq (Atrib (Var "z") (Var "x")) (Atrib (Var "x") (Var "y"))) 
